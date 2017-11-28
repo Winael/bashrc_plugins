@@ -28,7 +28,7 @@ fi
 EOF
 ```
 
-4. Source your $HOME/.bashrc
+4. Source your `$HOME/.bashrc`
 
 ```bash
 source $HOME/.bashrc
