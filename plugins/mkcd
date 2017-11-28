@@ -1,0 +1,11 @@
+################################
+# mkcd                         #
+################################
+
+# This plugin allow you to create a folder
+# and then go to it directly
+
+function mkcd() {
+    mkdir -p $1
+    cd $1
+}
