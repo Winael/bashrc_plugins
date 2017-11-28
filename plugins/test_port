@@ -1,0 +1,27 @@
+##############################
+# test_port                  #
+##############################
+
+# This plugin allow you to test an ip/port 
+# without using telnet
+#
+# usage: test_port <ip/url> <port>
+
+function test_port() {
+
+    DATEHEURE=$(date +%Y-%m-%d\ %H:%M:%S)
+    TSTPORT=$((echo > /dev/tcp/$1/$2) 2>&1)
+
+    if [ $? -eq 0 ]; then
+
+        echo "$DATEHEURE: The port $2 on host $1 is OPEN."
+        return 0
+
+    else
+
+        STATUS=$(echo ${TSTPORT} | awk -F ": " '{print $5}')
+        echo "$DATEHEURE: The port $2 on host $1 is not reachable: ${STATUS}."
+        return 1
+
+    fi
+}
