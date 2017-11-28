@@ -1,0 +1,3 @@
+# List of aliases to use with vim
+
+alias vi='vim'                                    # Use Vim instead of Vi
