@@ -2,6 +2,35 @@
 #############################
 # configure.sh              #
 #############################
+# The program ./configure need dialog to work
+
+if [ -z $(dpkg -l | awk '{print $2}' | grep dialog) ]; then
+
+    echo "./configure needs the dialog package to work. Install it ? [Y/n]"
+
+    while true; do
+
+        read installDialog
+
+        case ${installDialog} in
+
+            Y|y|[Yy]es) 
+                sudo apt install dialog
+                break
+                ;;
+            N|n|[Nn]o)
+                echo "You'll not be able to use ./configure"
+                break
+                ;;
+            *)
+                echo "I didn't understood what you said"
+                ;;
+
+        esac
+
+    done
+
+fi
 
 # This script help to configure bashrc_plugins
 
