@@ -1,0 +1,41 @@
+#!/bin/bash
+#############################
+# configure.sh              #
+#############################
+
+# This script help to configure bashrc_plugins
+
+availablePlugins=$(ls plugins)
+
+# Generation of the dialog box
+
+COUNT=0
+MENU_OPTIONS=()
+
+for plugin in ${availablePlugins}; do
+
+    COUNT=$(( ${count} + 1 ))
+
+    if [ -f .activated_plugins ]; then
+        
+	if [[ $(cat .activated_plugins) == *"${plugin}"* ]]; then
+	    
+	    state="on"
+
+	else
+            
+	    state="off"
+
+	fi
+    
+    fi
+
+    MENU_OPTIONS+=("${plugin}" "" "${state}")
+
+done
+
+dialog --checklist "Activate plugins here:" 22 76 16 "${MENU_OPTIONS[@]}" 2> .activated_plugins
+
+clear
+exec bash
+clear
