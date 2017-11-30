@@ -2,6 +2,35 @@
 #############################
 # configure.sh              #
 #############################
+# The program ./configure need dialog to work
+
+if [ -z $(dpkg -l | awk '{print $2}' | grep dialog) ]; then
+
+    echo "./configure needs the dialog package to work. Install it ? [Y/n]"
+
+    while true; do
+
+        read installDialog
+
+        case ${installDialog} in
+
+            Y|y|[Yy]es) 
+                sudo apt install dialog
+                break
+                ;;
+            N|n|[Nn]o)
+                echo "You'll not be able to use ./configure"
+                break
+                ;;
+            *)
+                echo "I didn't understood what you said"
+                ;;
+
+        esac
+
+    done
+
+fi
 
 # This script help to configure bashrc_plugins
 
@@ -16,9 +45,9 @@ for plugin in ${availablePlugins}; do
 
     COUNT=$(( ${count} + 1 ))
 
-    if [ -f .activated_plugins ]; then
+    if [ -f $HOME/.activated_bashrc_plugins ]; then
         
-	if [[ $(cat .activated_plugins) == *"${plugin}"* ]]; then
+	if [[ $(cat $HOME/.activated_bashrc_plugins) == *"${plugin}"* ]]; then
 	    
 	    state="on"
 
@@ -34,7 +63,7 @@ for plugin in ${availablePlugins}; do
 
 done
 
-dialog --checklist "Activate plugins here:" 22 76 16 "${MENU_OPTIONS[@]}" 2> .activated_plugins
+dialog --checklist "Activate plugins here:" 22 76 16 "${MENU_OPTIONS[@]}" 2> $HOME/.activated_bashrc_plugins
 
 clear
 exec bash
