@@ -7,50 +7,18 @@
 
 # Check if install is already done
 
-if [[ ! ${BASH_PLUGINS} ]]; then
+if [[ ${BASH_PLUGINS} ]]; then
 
     exit 0
 
 fi  
-
-# Check dependancies
-
-# The program ./configure need dialog to work
-
-if [ -z $(dpkg -l | awk '{print $2}' | grep dialog) ]; then
-
-    echo "./configure needs the dialog package to work. Install it ? [Y/n]"
-
-    while true; do
-
-        read installDialog
-
-        case ${installDialog} in
-
-            Y|y|[Yy]es) 
-                sudo apt install dialog
-                break
-                ;;
-            N|n|[Nn]o)
-                echo "You'll not be able to use ./configure"
-                break
-                ;;
-            *)
-                echo "I didn't understood what you said"
-                ;;
-
-        esac
-
-    done
-
-fi
 
 # Configuration of bashrc
 
 SCRIPT=$(readlink -f "$0")
 BASEDIR_BASHRC_PLUGINS=$(dirname "$SCRIPT")
 
-cat << EOF >> $HOME/.bashrc
+cat << \EOF >> $HOME/.bashrc
 
 # Bashrc plugins.
 # You may want to put manage plugins in bashrc
