@@ -18,7 +18,7 @@ fi
 SCRIPT=$(readlink -f "$0")
 BASEDIR_BASHRC_PLUGINS=$(dirname "$SCRIPT")
 
-cat << EOF >> $HOME/.bashrc
+cat << \EOF >> $HOME/.bashrc
 
 # Bashrc plugins.
 # You may want to put manage plugins in bashrc
