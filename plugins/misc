@@ -1,0 +1,5 @@
+# Misc
+
+## Exports
+
+export EDITOR=vi                                 # Set the default editor to vi

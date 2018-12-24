@@ -1,0 +1,6 @@
+# Kubernetes
+
+## Alias
+
+alias kcontext='kubectl config get-contexts'
+alias kswitch='kubectl config use-context'
