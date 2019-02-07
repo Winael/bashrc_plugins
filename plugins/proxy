@@ -1,0 +1,80 @@
+#!/bin/bash
+
+HOME_CFG=/home/winael/home.cfg
+ANDROID_CFG=/home/winael/android.cfg
+WORK_CFG=/home/winael/Carrefour/carrefour.cfg
+
+source ${HOME_CFG}
+source ${WORK_CFG}
+source ${ANDROID_CFG}
+
+function noproxy {
+
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+  unset FTP_PROXY
+  unset http_proxy
+  unset https_proxy
+  unset ftp_proxy
+
+  if [ $(grep Acquire /etc/apt/apt.conf | wc -l) -gt 0 ]; then
+    sudo sed -i '/Acquire/d' /etc/apt/apt.conf
+  fi
+
+  if [ $(gsettings get org.gnome.system.proxy mode) != 'none' ]; then
+    gsettings set org.gnome.system.proxy mode 'none'
+  fi
+
+}
+
+function proxywork {
+  if [ ${PROXY_METHOD} == 'manual' ]; then
+  
+    PROXY_WORK=${PROXY_PROTOCOL}://${PROXY_IP}:${PROXY_PORT}
+
+    export HTTP_PROXY=${PROXY_WORK}
+    export HTTPS_PROXY=${PROXY_WORK}
+    export FTP_PROXY=${PROXY_WORK}
+    export http_proxy=${PROXY_WORK}
+    export https_proxy=${PROXY_WORK}
+    export ftp_proxy=${PROXY_WORK}
+
+    if [ $(grep ${PROXY_IP} /etc/apt/apt.conf | wc -l) -eq 0 ]; then
+
+      echo "Acquire::http::Proxy \"http://10.176.205.3:8080\";" | sudo tee -a /etc/apt/apt.conf > /dev/null
+
+    fi
+
+    if [ $(gsettings get org.gnome.system.proxy mode) != 'manual' ]; then
+
+      gsettings set org.gnome.system.proxy mode 'manual'
+
+    fi
+
+  fi
+}
+
+
+
+GATEWAY_LIST=()
+
+for INTERFACE in enp3s0 wlp2s0; do
+  GATEWAY_LIST=("${GATEWAY_LIST[@]}" $(ip address show ${INTERFACE} | grep "inet " | awk '{print $4}'))
+done
+
+for GW in "${GATEWAY_LIST[@]}"; do
+  case ${GW} in
+    ${GATEWAY_HOME} )
+      echo "At home. Don't need proxy !"
+      noproxy
+      ;;
+    ${GATEWAY_WORK_ETH} | ${GATEWAY_WORK_WIFI} )
+      echo "At work. Using proxy"
+      proxywork
+      ;;
+    ${GATEWAY_ANDROID} )
+      echo "On Android. Don't need proxy !"
+      noproxy
+      ;;
+  esac
+done	  
