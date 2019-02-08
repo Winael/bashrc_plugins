@@ -1,0 +1,9 @@
+# Fuzzy Finder
+
+## functions
+
+#fe() {
+#  local files 2>/dev/null
+#  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+#  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+#}
